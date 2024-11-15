@@ -32,13 +32,8 @@ int main(void)
 	  if(bufferAcqCplt == true)
 	  {
 		  bufferAcqCplt = false;
-<<<<<<< HEAD
-		  //SwapBuffers(&dsp);
-		  //ProcessEffectLoop(dsp.loop);
-=======
 		  SwapBuffers(&dsp);
 		  ProcessEffectLoop(dsp.loop);
->>>>>>> 30a0307 (Initial commit, bypass effect)
 	  }
   }
 
