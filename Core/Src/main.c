@@ -6,8 +6,6 @@
 
 static DspBase dsp;
 static bool bufferAcqCplt = false;
-uint16_t adcBuffer[2*BUFFER_SIZE];
-uint16_t dacBuffer[2*BUFFER_SIZE];
 
 void SetBufferAcqCpltFlag(void)
 {
@@ -20,12 +18,30 @@ int main(void)
 	Init();
 	InitDspBase(&dsp);
 
-	Effect bypass;
-	bypass.isActive = true;
-	bypass.process = EffectBypassDebug;
-	dsp.loop->chain = &bypass;
+//	Effect bypass;
+//	bypass.isActive = true;
+//	bypass.process = EffectBypassDebug;
+//	dsp.loop->chain = &bypass;
 
-	StartAudioStream(adcBuffer, dacBuffer);
+	Effect delay;
+	DelayEffect delayS;
+	delay.isActive = true;
+	delay.data = &delayS;
+	delay.process = ProcessDelay;
+
+	Effect lowpass;
+	FilterEffect filter;
+	filter.freq = 1000;
+	filter.lastSample = 0.0f;
+	lowpass.data = &filter;
+	lowpass.isActive = true;
+	lowpass.process = LowPass;
+
+	InitDelayEffect(&delayS, 0.5, 0.8);
+	dsp.loop->chain = &delay;
+	//dsp.loop->chain = &lowpass;
+
+	StartAudioStream(dsp.adcBuffer, dsp.dacBuffer);
 
   while (1)
   {

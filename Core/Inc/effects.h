@@ -15,7 +15,20 @@ typedef struct Buffer Buffer;
 // bypass for debug purposes. Simply converts and reconverts samples
 void EffectBypassDebug(void* self, Buffer* buffer);
 
+// ===== FILTERS =====
+// IIR generic filters
+
+typedef struct
+{
+	int freq;
+	float lastSample;
+}FilterEffect;
+
+void LowPass(void* self, Buffer* buffer);
+
 // ===== EFFECTS =====
+
+// ====================================== DELAY
 
 // simple delay effect, with dry/wet and feedback options
 
@@ -23,8 +36,6 @@ void EffectBypassDebug(void* self, Buffer* buffer);
 // buffer size limited by RAM!!
 #define MAX_DELAY_BUFFER_LEN 25600
 #define DEFAULT_DELAY_BUFFER_LEN 25600
-
-// ====================================== DELAY
 
 typedef struct
 {
@@ -36,6 +47,8 @@ typedef struct
 
 	float mix;
 	float feedback;
+
+	FilterEffect* filters;
 }DelayEffect;
 
 void InitDelayEffect(DelayEffect* delay, float mix, float feedback);

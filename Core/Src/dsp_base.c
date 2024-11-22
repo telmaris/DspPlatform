@@ -54,6 +54,7 @@ void ConvertAdcSamples(DspBase* base)
 		sample = ((adcBuffer[buf*size+i]*1.0f)/2048.0f - 1.0f);
 		processingBuffer[buf*size+i] = sample;
 	}
+	asm("nop");
 }
 
 void ConvertDacSamples(DspBase* base)
@@ -74,11 +75,16 @@ void ConvertDacSamples(DspBase* base)
 		sample = (uint16_t)((fsample + 1.0f)*2048);
 		dacBuffer[buf*size+i] = sample;
 	}
+	asm("nop");
 }
 
 void InitDspBase(DspBase* base)
 {
 	base->processingBuffer.size = BUFFER_SIZE;
+	for(int i = 0; i < 2*BUFFER_SIZE; i++)
+	{
+		base->processingBuffer.buffer[i] = 0.0f;
+	}
 	base->processingBuffer.currentBuffer = 0;
 	base->loop = (EffectLoop*)malloc(sizeof(EffectLoop));
 	base->loop->base = base;
